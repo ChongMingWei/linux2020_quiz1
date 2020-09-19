@@ -93,6 +93,19 @@ void print_list(node_t *head)
     printf("\n");
 }
 
+node_t *rev_recursive(node_t *head)
+{
+    if (!head->next) {
+        return head;
+    }
+    node_t *first = head;
+    node_t *rest = head->next;
+    rest = rev_recursive(rest);
+    first->next->next = first;
+    first->next = NULL;
+    return rest;
+}
+
 int main(int argc, char const *argv[])
 {
     node_t *head = NULL;
@@ -125,7 +138,8 @@ int main(int argc, char const *argv[])
     print_list(head);
 
     //head = reverse(head);
-    reverse_modified(&head);
+    //reverse_modified(&head);
+    head = rev_recursive(head);
     print_list(head);
 
     return 0;
