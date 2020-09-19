@@ -52,6 +52,8 @@ node_t *swap_pair(node_t *head)
 
 void swap_pair_modified(node_t **head)
 {
+    if(!(*head))
+        return;
     for(node_t **node = head; *node && (*node)->next; node = &(*node)->next->next) {
         node_t *tmp = *node;
         *node = (*node)->next;
@@ -75,6 +77,8 @@ node_t *reverse(node_t *head)
 
 void reverse_modified(node_t **head)
 {
+    if(!(*head))
+        return;
     node_t **indirect = head;
     node_t *cursor = NULL;
     while (*indirect) {
@@ -95,7 +99,7 @@ void print_list(node_t *head)
 
 node_t *rev_recursive(node_t *head)
 {
-    if (!head->next) {
+    if (!head || !head->next) {
         return head;
     }
     node_t *first = head;
