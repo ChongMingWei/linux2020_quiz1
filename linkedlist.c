@@ -115,6 +115,7 @@ void Fisher_Yates_shuffle(node_t **head, int size)
 {
     if(!*head)
         return;
+    // Currently use rand() c provides
     srand(time(NULL));
     int i = size - 1;
     while(i > 0){//1<=i<=size-1
@@ -123,6 +124,8 @@ void Fisher_Yates_shuffle(node_t **head, int size)
         int cnt = 0;
         int j = rand() % (i + 1); //0<=j<=i
         //printf("current j=%d\n",j); //current choosen index j
+        
+        // If i equals to j, no exchange occurs
         if (i==j){
             //printf("skip: j=%d\n",j);
             --i;
@@ -135,7 +138,7 @@ void Fisher_Yates_shuffle(node_t **head, int size)
             node_t *tmp_next = NULL;
             if (j == 0) {
                 int cnt = 1;
-                /* find node i and j */
+                /* Find node i and j */
                 node_prej = *indirect;
                 while (cnt < i){
                     indirect = &(*indirect)->next;
@@ -144,7 +147,7 @@ void Fisher_Yates_shuffle(node_t **head, int size)
                 node_prei = *indirect;
                 tmp_pre = *head;
                 tmp_next = (*head)->next;
-                /* exchange node i and j */
+                /* Exchange node i and j */
                 if(node_prej == node_prei){//node_prei, node_prej and *head point to same node(head node)
                     (*head)->next = node_prei->next->next;
                     *head = tmp_next;
@@ -157,7 +160,7 @@ void Fisher_Yates_shuffle(node_t **head, int size)
                     node_prei->next = tmp_pre;
                 }
             } else {
-                /* find node i and j */
+                /* Find node i and j */
                 int cnt = 1;
                 while(cnt < i){
                     if (cnt==j)
@@ -166,7 +169,7 @@ void Fisher_Yates_shuffle(node_t **head, int size)
                     ++cnt;
                 }
                 node_prei = *indirect;
-                /* exchange node i and j */
+                /* Exchange node i and j */
                 tmp_pre = node_prej->next;
                 tmp_next = node_prej->next->next;
                 if (node_prei == node_prej->next){
