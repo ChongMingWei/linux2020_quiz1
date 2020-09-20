@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <time.h>
 typedef struct __node {
     int value;
     struct __node *next;
@@ -110,6 +111,81 @@ node_t *rev_recursive(node_t *head)
     return rest;
 }
 
+void Fisher_Yates_shuffle(node_t **head, int size)
+{
+    if(!*head)
+        return;
+    srand(time(NULL));
+    int i = size - 1;
+    while(i > 0){//1<=i<=size-1
+        //printf("i=%d\n",i); //current round
+        node_t **indirect = head;
+        int cnt = 0;
+        int j = rand() % (i + 1); //0<=j<=i
+        //printf("current j=%d\n",j); //current choosen index j
+        if (i==j){
+            //printf("skip: j=%d\n",j);
+            --i;
+            continue;
+        }
+        else{
+            node_t *node_prei = NULL;
+            node_t *node_prej = NULL;
+            node_t *tmp_pre = NULL;
+            node_t *tmp_next = NULL;
+            if (j == 0) {
+                int cnt = 1;
+                /* find node i and j */
+                node_prej = *indirect;
+                while (cnt < i){
+                    indirect = &(*indirect)->next;
+                    ++cnt;
+                }
+                node_prei = *indirect;
+                tmp_pre = *head;
+                tmp_next = (*head)->next;
+                /* exchange node i and j */
+                if(node_prej == node_prei){//node_prei, node_prej and *head point to same node(head node)
+                    (*head)->next = node_prei->next->next;
+                    *head = tmp_next;
+                    (*head)->next = tmp_pre;
+                }
+                else{
+                    (*head)->next = node_prei->next->next;
+                    *head = node_prei->next;
+                    node_prei->next->next = tmp_next;
+                    node_prei->next = tmp_pre;
+                }
+            } else {
+                /* find node i and j */
+                int cnt = 1;
+                while(cnt < i){
+                    if (cnt==j)
+                        node_prej = *indirect;
+                    indirect = &(*indirect)->next;
+                    ++cnt;
+                }
+                node_prei = *indirect;
+                /* exchange node i and j */
+                tmp_pre = node_prej->next;
+                tmp_next = node_prej->next->next;
+                if (node_prei == node_prej->next){
+                    node_prei->next = tmp_next->next;
+                    node_prej->next = tmp_next;
+                    tmp_next->next = tmp_pre;
+                }
+                else {
+                    node_prej->next->next = node_prei->next->next;
+                    node_prej->next = node_prei->next;
+                    node_prei->next->next = tmp_next;
+                    node_prei->next = tmp_pre;
+                }
+            }
+        }
+        --i;
+    }
+}
+
 int main(int argc, char const *argv[])
 {
     node_t *head = NULL;
@@ -145,6 +221,7 @@ int main(int argc, char const *argv[])
     //reverse_modified(&head);
     head = rev_recursive(head);
     print_list(head);
-
+    Fisher_Yates_shuffle(&head,5);
+    print_list(head);
     return 0;
 }
